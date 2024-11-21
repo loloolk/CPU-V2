@@ -32,15 +32,15 @@ OPCODES:
 0x0d - jg to address defined in SRC 1
 0x0d (INV) - jle to address defined in SRC 1
 
-0x0e - write mem at address SRC 1, the data in SRC 2
-0x0e (INV) - push - write mem at address in sp, the data in SRC 2, add sp by 1
-0x0f - read mem at address SRC 1, store in DST
+0x0e - write mem at address SRC 2, the data in SRC 1
+0x0e (INV) - push - write mem at address in sp, the data in SRC 1, add sp by 1
+0x0f - read mem at address SRC 2, store in DST
 0x0f (INV) - pop - read mem at address in sp, store in DST. sub sp by 1
 
 Sub Commands:
 res - Resets register by xoring it with itself
-psh - pushes onto mem at location of stack pointer (adds by 1)
-pop - pops from mem at location of stack pointer (subs by 1)
+
 
 Fibonacci sequence:
-8480 0001 1502 1414 1484 A800 0002
+0000 8402 0001 1414 7900 0480 0502 a800
+0003

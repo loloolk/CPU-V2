@@ -8,8 +8,14 @@
     </tool>
   </lib>
   <lib desc="#Gates" name="1">
+    <tool name="AND Gate">
+      <a name="facing" val="south"/>
+    </tool>
     <tool name="NAND Gate">
       <a name="facing" val="south"/>
+    </tool>
+    <tool name="Controlled Buffer">
+      <a name="facing" val="north"/>
     </tool>
   </lib>
   <lib desc="#Plexers" name="2"/>
@@ -76,6 +82,18 @@
       <a name="facing" val="east"/>
       <a name="label" val="RESET"/>
     </comp>
+    <comp lib="1" loc="(850,660)" name="Buffer">
+      <a name="width" val="16"/>
+    </comp>
+    <comp lib="1" loc="(870,660)" name="Buffer">
+      <a name="width" val="16"/>
+    </comp>
+    <comp lib="1" loc="(890,660)" name="Buffer">
+      <a name="width" val="16"/>
+    </comp>
+    <comp lib="1" loc="(910,660)" name="Buffer">
+      <a name="width" val="16"/>
+    </comp>
     <comp lib="4" loc="(1080,580)" name="RAM">
       <a name="addrWidth" val="16"/>
       <a name="appearance" val="logisim_evolution"/>
@@ -91,12 +109,12 @@
       <a name="trigger" val="falling"/>
     </comp>
     <comp loc="(800,570)" name="CPU"/>
-    <wire from="(1070,630)" to="(1070,640)"/>
-    <wire from="(1070,640)" to="(1080,640)"/>
     <wire from="(1080,610)" to="(1080,630)"/>
     <wire from="(1120,500)" to="(1120,580)"/>
     <wire from="(1320,660)" to="(1330,660)"/>
+    <wire from="(1320,670)" to="(1330,670)"/>
     <wire from="(1330,560)" to="(1330,660)"/>
+    <wire from="(1330,660)" to="(1330,670)"/>
     <wire from="(170,850)" to="(250,850)"/>
     <wire from="(180,590)" to="(190,590)"/>
     <wire from="(190,170)" to="(190,590)"/>
@@ -113,9 +131,12 @@
     <wire from="(800,50)" to="(800,570)"/>
     <wire from="(800,590)" to="(1080,590)"/>
     <wire from="(800,610)" to="(1080,610)"/>
-    <wire from="(800,630)" to="(1070,630)"/>
+    <wire from="(800,630)" to="(870,630)"/>
     <wire from="(800,650)" to="(800,660)"/>
-    <wire from="(800,660)" to="(1080,660)"/>
+    <wire from="(800,660)" to="(830,660)"/>
+    <wire from="(870,630)" to="(870,640)"/>
+    <wire from="(870,640)" to="(1080,640)"/>
+    <wire from="(910,660)" to="(1080,660)"/>
   </circuit>
   <circuit name="CPU">
     <a name="appearance" val="logisim_evolution"/>
@@ -421,6 +442,10 @@
       <a name="output" val="true"/>
       <a name="width" val="16"/>
     </comp>
+    <comp lib="0" loc="(1890,3260)" name="Tunnel">
+      <a name="facing" val="south"/>
+      <a name="label" val="CLOCK"/>
+    </comp>
     <comp lib="0" loc="(1890,3420)" name="Pin">
       <a name="appearance" val="NewPins"/>
       <a name="facing" val="west"/>
@@ -435,10 +460,6 @@
     <comp lib="0" loc="(1900,2890)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="POP"/>
-    </comp>
-    <comp lib="0" loc="(1900,3280)" name="Tunnel">
-      <a name="facing" val="south"/>
-      <a name="label" val="CLOCK"/>
     </comp>
     <comp lib="0" loc="(1920,1120)" name="Tunnel">
       <a name="facing" val="east"/>
@@ -563,6 +584,9 @@
       <a name="bit9" val="3"/>
       <a name="fanout" val="7"/>
       <a name="incoming" val="16"/>
+    </comp>
+    <comp lib="0" loc="(430,460)" name="Tunnel">
+      <a name="label" val="NIMM"/>
     </comp>
     <comp lib="0" loc="(460,340)" name="Tunnel">
       <a name="label" val="IMM_VAL"/>
@@ -726,8 +750,20 @@
       <a name="control" val="left"/>
       <a name="width" val="16"/>
     </comp>
+    <comp lib="1" loc="(1760,3420)" name="Buffer">
+      <a name="width" val="16"/>
+    </comp>
+    <comp lib="1" loc="(1780,3420)" name="Buffer">
+      <a name="width" val="16"/>
+    </comp>
     <comp lib="1" loc="(1800,3260)" name="Controlled Buffer">
       <a name="control" val="left"/>
+      <a name="width" val="16"/>
+    </comp>
+    <comp lib="1" loc="(1800,3420)" name="Buffer">
+      <a name="width" val="16"/>
+    </comp>
+    <comp lib="1" loc="(1820,3420)" name="Buffer">
       <a name="width" val="16"/>
     </comp>
     <comp lib="1" loc="(1830,3200)" name="NOT Gate">
@@ -735,6 +771,9 @@
     </comp>
     <comp lib="1" loc="(1840,3210)" name="Controlled Buffer">
       <a name="control" val="left"/>
+      <a name="width" val="16"/>
+    </comp>
+    <comp lib="1" loc="(1840,3420)" name="Buffer">
       <a name="width" val="16"/>
     </comp>
     <comp lib="1" loc="(1850,2740)" name="AND Gate">
@@ -802,7 +841,6 @@
     <comp lib="1" loc="(810,3230)" name="Controlled Buffer">
       <a name="width" val="16"/>
     </comp>
-    <comp lib="1" loc="(840,690)" name="NOT Gate"/>
     <comp lib="1" loc="(870,3260)" name="NOT Gate"/>
     <comp lib="1" loc="(880,3550)" name="NOT Gate">
       <a name="facing" val="north"/>
@@ -840,7 +878,6 @@
     <comp lib="4" loc="(1210,3120)" name="Counter">
       <a name="appearance" val="logisim_evolution"/>
       <a name="max" val="0xffff"/>
-      <a name="trigger" val="falling"/>
       <a name="width" val="16"/>
     </comp>
     <comp lib="4" loc="(1260,1040)" name="Register">
@@ -1064,7 +1101,7 @@
     <wire from="(1670,2930)" to="(1670,3210)"/>
     <wire from="(1670,3210)" to="(1670,3420)"/>
     <wire from="(1670,3420)" to="(1670,3590)"/>
-    <wire from="(1670,3420)" to="(1890,3420)"/>
+    <wire from="(1670,3420)" to="(1740,3420)"/>
     <wire from="(1670,3590)" to="(1670,3690)"/>
     <wire from="(1670,3690)" to="(1670,3800)"/>
     <wire from="(1670,3800)" to="(1670,3910)"/>
@@ -1104,13 +1141,15 @@
     <wire from="(1830,3160)" to="(1830,3170)"/>
     <wire from="(1840,3210)" to="(1840,3260)"/>
     <wire from="(1840,3210)" to="(1890,3210)"/>
+    <wire from="(1840,3420)" to="(1890,3420)"/>
     <wire from="(1850,2740)" to="(1870,2740)"/>
     <wire from="(1850,2790)" to="(1870,2790)"/>
     <wire from="(1850,3310)" to="(1920,3310)"/>
     <wire from="(1850,3370)" to="(1930,3370)"/>
+    <wire from="(1890,3260)" to="(1890,3330)"/>
+    <wire from="(1890,3330)" to="(1900,3330)"/>
     <wire from="(1900,2870)" to="(1910,2870)"/>
     <wire from="(1900,2890)" to="(1910,2890)"/>
-    <wire from="(1900,3280)" to="(1900,3330)"/>
     <wire from="(1900,3330)" to="(1900,3350)"/>
     <wire from="(1900,3330)" to="(1920,3330)"/>
     <wire from="(1920,1120)" to="(2060,1120)"/>
@@ -1200,13 +1239,11 @@
     <wire from="(630,280)" to="(650,280)"/>
     <wire from="(650,300)" to="(650,350)"/>
     <wire from="(650,350)" to="(650,690)"/>
-    <wire from="(650,690)" to="(810,690)"/>
     <wire from="(730,3260)" to="(800,3260)"/>
     <wire from="(730,3580)" to="(880,3580)"/>
     <wire from="(800,3240)" to="(800,3260)"/>
     <wire from="(800,3260)" to="(840,3260)"/>
     <wire from="(810,3230)" to="(930,3230)"/>
-    <wire from="(840,690)" to="(900,690)"/>
     <wire from="(840,720)" to="(870,720)"/>
     <wire from="(870,280)" to="(940,280)"/>
     <wire from="(870,320)" to="(910,320)"/>
