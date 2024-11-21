@@ -1,0 +1,46 @@
+Fixed Length Instruction Encoding
+1 - Immediate Value, 1 - Inverter, 4 - OPCODE, 3 - SRC 1, 3 - SRC 2, 3 - DST, 1- NULL
+
+Reg Codes:
+0-7: a, b, c, d, tmp1, sp, bp, ir
+COMPARATOR BITS:
+less, equal, greater, not equal
+
+OPCODES:
+
+0x00 - noop - No Operation
+0x01 - mov - Move data from SRC 1 to DST
+0x01 (INV) - not SCR 1 and store in DST
+0x02 - and SCR 1 & SRC 2 and store in DST
+0x02 (INV) - nand SCR 1 & SRC 2 and store in DST
+0x03 - or SCR 1 & SRC 2 and store in DST
+0x03 (INV) - nor SCR 1 & SRC 2 and store in DST
+0x04 - xor SCR 1 & SRC 2 and store in DST
+0x04 (INV) - xnor SCR 1 & SRC 2 and store in DST
+
+0x05 - add SCR 1 & SRC 2 and store in DST
+0x06 - sub SCR 1 & SRC 2 and store in DST
+0x07 - shl SCR 1 and store in DST
+0x08 - shr SCR 1 and store in DST
+
+0x09 - cmp SCR 1 and SRC 2 (result store in compare register)
+0x0a - jmp to address defined in SRC 1
+0x0b - je to address defined in SRC 1
+0x0b (INV) - jne to address defined in SRC 1
+0x0c - jl to address defined in SRC 1
+0x0c (INV) - jge to address defined in SRC 1
+0x0d - jg to address defined in SRC 1
+0x0d (INV) - jle to address defined in SRC 1
+
+0x0e - write mem at address SRC 1, the data in SRC 2
+0x0e (INV) - push - write mem at address in sp, the data in SRC 2, add sp by 1
+0x0f - read mem at address SRC 1, store in DST
+0x0f (INV) - pop - read mem at address in sp, store in DST. sub sp by 1
+
+Sub Commands:
+res - Resets register by xoring it with itself
+psh - pushes onto mem at location of stack pointer (adds by 1)
+pop - pops from mem at location of stack pointer (subs by 1)
+
+Fibonacci sequence:
+8480 0001 1502 1414 1484 A800 0002
