@@ -543,7 +543,7 @@
       <a name="facing" val="north"/>
       <a name="label" val="RESET"/>
     </comp>
-    <comp lib="0" loc="(340,400)" name="Tunnel">
+    <comp lib="0" loc="(340,510)" name="Tunnel">
       <a name="label" val="IMM_VAL"/>
     </comp>
     <comp lib="0" loc="(350,330)" name="Splitter">
@@ -566,6 +566,9 @@
     </comp>
     <comp lib="0" loc="(460,340)" name="Tunnel">
       <a name="label" val="IMM_VAL"/>
+    </comp>
+    <comp lib="0" loc="(460,410)" name="Tunnel">
+      <a name="label" val="RESET"/>
     </comp>
     <comp lib="0" loc="(530,310)" name="Tunnel">
       <a name="label" val="INV_VAL"/>
@@ -786,7 +789,7 @@
     <comp lib="1" loc="(290,330)" name="Controlled Buffer">
       <a name="width" val="16"/>
     </comp>
-    <comp lib="1" loc="(320,390)" name="Controlled Buffer">
+    <comp lib="1" loc="(320,500)" name="Controlled Buffer">
       <a name="facing" val="north"/>
       <a name="width" val="16"/>
     </comp>
@@ -884,9 +887,6 @@
       <a name="width" val="16"/>
     </comp>
     <comp lib="4" loc="(380,330)" name="T Flip-Flop">
-      <a name="appearance" val="logisim_evolution"/>
-    </comp>
-    <comp lib="4" loc="(470,390)" name="D Flip-Flop">
       <a name="appearance" val="logisim_evolution"/>
     </comp>
     <comp loc="(1650,200)" name="REG_Decoder"/>
@@ -1169,10 +1169,10 @@
     <wire from="(280,460)" to="(430,460)"/>
     <wire from="(290,330)" to="(320,330)"/>
     <wire from="(290,590)" to="(290,640)"/>
-    <wire from="(320,330)" to="(320,390)"/>
+    <wire from="(320,330)" to="(320,500)"/>
     <wire from="(320,330)" to="(350,330)"/>
-    <wire from="(320,410)" to="(320,530)"/>
-    <wire from="(330,400)" to="(340,400)"/>
+    <wire from="(320,520)" to="(320,530)"/>
+    <wire from="(330,510)" to="(340,510)"/>
     <wire from="(370,270)" to="(600,270)"/>
     <wire from="(370,280)" to="(610,280)"/>
     <wire from="(370,290)" to="(620,290)"/>
@@ -1180,6 +1180,8 @@
     <wire from="(370,310)" to="(530,310)"/>
     <wire from="(370,320)" to="(370,340)"/>
     <wire from="(370,320)" to="(440,320)"/>
+    <wire from="(400,390)" to="(400,410)"/>
+    <wire from="(400,410)" to="(460,410)"/>
     <wire from="(430,340)" to="(460,340)"/>
     <wire from="(430,380)" to="(430,460)"/>
     <wire from="(440,320)" to="(440,360)"/>
