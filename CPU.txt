@@ -2,7 +2,7 @@ Fixed Length Instruction Encoding
 1 - Immediate Value, 1 - Inverter, 4 - OPCODE, 3 - SRC 1, 3 - SRC 2, 3 - DST, 1- NULL
 
 Reg Codes:
-0-7: a, b, c, d, tmp1, sp, bp, ir
+0-7: a, b, c, d, e, f, bp, sp
 COMPARATOR BITS:
 less, equal, greater, not equal
 
