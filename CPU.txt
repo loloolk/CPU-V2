@@ -1,5 +1,5 @@
 Fixed Length Instruction Encoding
-1 - Immediate Value, 1 - Inverter, 4 - OPCODE, 3 - SRC 1, 3 - SRC 2, 3 - DST, 1- NULL
+1 - Immediate Value, 1 - Inverter, 4 - OPCODE, 3 - SRC1, 3 - SRC2, 3 - DST, 1- NULL
 
 Reg Codes:
 0-7: a, b, c, d, e, f, bp, sp
@@ -10,36 +10,37 @@ OPCODES:
 
 0x00 - noop - No Operation
 0x01 - mov - Move data from SRC 1 to DST
-0x01 (INV) - not SCR 1 and store in DST
-0x02 - and SCR 1 & SRC 2 and store in DST
-0x02 (INV) - nand SCR 1 & SRC 2 and store in DST
-0x03 - or SCR 1 & SRC 2 and store in DST
-0x03 (INV) - nor SCR 1 & SRC 2 and store in DST
-0x04 - xor SCR 1 & SRC 2 and store in DST
-0x04 (INV) - xnor SCR 1 & SRC 2 and store in DST
+0x01 (INV) - Not SCR 1 and store in DST
+0x02 - And SCR 1 & SRC 2 and store in DST
+0x02 (INV) - Nand SCR 1 & SRC 2 and store in DST
+0x03 - Or SCR 1 & SRC 2 and store in DST
+0x03 (INV) - Nor SCR 1 & SRC 2 and store in DST
+0x04 - Xor SCR 1 & SRC 2 and store in DST
+0x04 (INV) - Xnor SCR 1 & SRC 2 and store in DST
 
-0x05 - add SCR 1 & SRC 2 and store in DST
-0x06 - sub SCR 1 & SRC 2 and store in DST
-0x07 - shl SCR 1 and store in DST
-0x08 - shr SCR 1 and store in DST
+0x05 - Add SCR 1 & SRC 2 and store in DST
+0x06 - Sub SCR 1 & SRC 2 and store in DST
+0x07 - Shl SCR 1 and store in DST
+0x08 - Shr SCR 1 and store in DST
 
-0x09 - cmp SCR 1 and SRC 2 (result store in compare register)
-0x0a - jmp to address defined in SRC 1
-0x0b - je to address defined in SRC 1
-0x0b (INV) - jne to address defined in SRC 1
-0x0c - jl to address defined in SRC 1
-0x0c (INV) - jge to address defined in SRC 1
-0x0d - jg to address defined in SRC 1
-0x0d (INV) - jle to address defined in SRC 1
+0x09 - cmp - Compare SCR 1 and SRC 2 (result store in compare register)
+0x0a - jmp - Jump to address defined in SRC 1
+0x0b - je - Jump to address defined in SRC 1 if equality bit is set in compare register
+0x0b (INV) - jne - Jump to address defined in SRC 1 if equality bit is not set in compare register
+0x0c - jl - Jump to address defined in SRC 1 if less-than bit is set in compare register
+0x0c (INV) - jge - Jump to address defined in SRC 1 if less-than bit is not set in compare register
+0x0d - jg - Jump to address defined in SRC 1 if greater-than bit is set in compare register
+0x0d (INV) - jle - Jump to address defined in SRC 1 if greater-than bit is not set in compare register
 
-0x0e - write mem at address SRC 2, the data in SRC 1
-0x0e (INV) - push - write mem at address in sp, the data in SRC 1, add sp by 1
-0x0f - read mem at address SRC 2, store in DST
-0x0f (INV) - pop - read mem at address in sp, store in DST. sub sp by 1
+0x0e - wrt - Write the memory at address SRC 2, the data in SRC 1
+0x0e (INV) - push - Write mem at address in sp, the data in SRC 1, increment sp by 1
+0x0f - read - Read mem at address SRC 2, store in DST
+0x0f (INV) - pop - Decrement sp by 1, read mem at address in sp, store in DST. 
+
+Immediate Value Overwrites SRC1
 
 Sub Commands:
-res - Resets register by xoring it with itself
-
+res - Resets register by xoring it with itself (same as mov 0, 1 clock tick faster)
 
 Fibonacci sequence:
 0000 8402 0001 1414 7900 0480 0502 a800
