@@ -88,3 +88,18 @@ end: (0x0018)
 71, 73, 79, 
 83, 89, 
 97
+
+Future Possible Improvements:
+Floating Point Operations
+Visual Interface
+RAM to PROGRAM pipeline (load programs from RAM into instructions)
+signed support
+Peripheral interface (?)
+
+For 4 bit (x) by 4 bit (y) multiplication
+for i=0-4 {
+If x & 0x1 == 1 {
+x += (y << 4)
+x >> 1
+}
+}
