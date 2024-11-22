@@ -46,7 +46,7 @@ Fibonacci sequence:
 0000 8402 0001 1414 7900 0480 0502 a800
 0003
 
-Prime Number Solver:
+Prime Number Solver (Pseudo Code):
 0x0000
 imm 100->R0 | 0x8400 0x0064
 mov R0->SP  | 0x040E
