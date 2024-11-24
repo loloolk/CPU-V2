@@ -81,30 +81,25 @@
     <a name="appearance" val="logisim_evolution"/>
     <a name="circuit" val="main"/>
     <a name="circuitnamedboxfixedsize" val="true"/>
-    <a name="simulationFrequency" val="64000.0"/>
+    <a name="simulationFrequency" val="1.0"/>
     <comp lib="0" loc="(1080,510)" name="Tunnel">
       <a name="facing" val="south"/>
+      <a name="label" val="RESET"/>
+    </comp>
+    <comp lib="0" loc="(120,580)" name="Clock"/>
+    <comp lib="0" loc="(150,610)" name="Tunnel">
+      <a name="facing" val="east"/>
       <a name="label" val="RESET"/>
     </comp>
     <comp lib="0" loc="(170,850)" name="Pin">
       <a name="appearance" val="classic"/>
       <a name="label" val="RESET"/>
     </comp>
-    <comp lib="0" loc="(180,590)" name="Clock"/>
     <comp lib="0" loc="(250,850)" name="Tunnel">
       <a name="label" val="RESET"/>
     </comp>
-    <comp lib="0" loc="(420,630)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="RESET"/>
-    </comp>
-    <comp lib="1" loc="(450,600)" name="NOT Gate">
-      <a name="facing" val="north"/>
-      <a name="size" val="20"/>
-    </comp>
-    <comp lib="1" loc="(460,590)" name="Controlled Buffer"/>
-    <comp lib="1" loc="(510,590)" name="Controlled Buffer">
-      <a name="facing" val="north"/>
+    <comp lib="1" loc="(210,590)" name="XOR Gate">
+      <a name="size" val="30"/>
     </comp>
     <comp lib="4" loc="(1040,580)" name="RAM">
       <a name="addrWidth" val="16"/>
@@ -126,25 +121,18 @@
     <wire from="(1030,610)" to="(1030,630)"/>
     <wire from="(1030,630)" to="(1040,630)"/>
     <wire from="(1080,510)" to="(1080,580)"/>
+    <wire from="(120,580)" to="(170,580)"/>
     <wire from="(1280,560)" to="(1280,670)"/>
+    <wire from="(150,610)" to="(170,610)"/>
+    <wire from="(170,600)" to="(170,610)"/>
+    <wire from="(170,610)" to="(580,610)"/>
     <wire from="(170,850)" to="(250,850)"/>
-    <wire from="(180,590)" to="(190,590)"/>
-    <wire from="(190,170)" to="(190,590)"/>
-    <wire from="(190,170)" to="(220,170)"/>
-    <wire from="(190,590)" to="(440,590)"/>
+    <wire from="(210,170)" to="(210,590)"/>
+    <wire from="(210,170)" to="(220,170)"/>
+    <wire from="(210,590)" to="(580,590)"/>
     <wire from="(220,50)" to="(220,110)"/>
     <wire from="(220,50)" to="(800,50)"/>
-    <wire from="(420,630)" to="(450,630)"/>
-    <wire from="(450,600)" to="(450,610)"/>
-    <wire from="(450,620)" to="(450,630)"/>
-    <wire from="(450,630)" to="(520,630)"/>
     <wire from="(460,190)" to="(580,190)"/>
-    <wire from="(460,590)" to="(510,590)"/>
-    <wire from="(510,590)" to="(580,590)"/>
-    <wire from="(510,610)" to="(520,610)"/>
-    <wire from="(520,600)" to="(520,610)"/>
-    <wire from="(520,610)" to="(520,630)"/>
-    <wire from="(520,610)" to="(580,610)"/>
     <wire from="(570,560)" to="(1280,560)"/>
     <wire from="(570,560)" to="(570,630)"/>
     <wire from="(570,630)" to="(580,630)"/>
