@@ -10,13 +10,13 @@ OPCODES:
 
 0x00 - noop - No Operation
 0x01 - mov - Move data from SRC 1 to DST
-0x01 (INV) - Not SCR 1 and store in DST
+0x11 (INV) - Not SCR 1 and store in DST
 0x02 - And SCR 1 & SRC 2 and store in DST
-0x02 (INV) - Nand SCR 1 & SRC 2 and store in DST
+0x12 (INV) - Nand SCR 1 & SRC 2 and store in DST
 0x03 - Or SCR 1 & SRC 2 and store in DST
-0x03 (INV) - Nor SCR 1 & SRC 2 and store in DST
+0x13 (INV) - Nor SCR 1 & SRC 2 and store in DST
 0x04 - Xor SCR 1 & SRC 2 and store in DST
-0x04 (INV) - Xnor SCR 1 & SRC 2 and store in DST
+0x14 (INV) - Xnor SCR 1 & SRC 2 and store in DST
 
 0x05 - Add SCR 1 & SRC 2 and store in DST
 0x06 - Sub SCR 1 & SRC 2 and store in DST
@@ -26,16 +26,16 @@ OPCODES:
 0x09 - cmp - Compare SCR 1 and SRC 2 (result store in compare register)
 0x0a - jmp - Jump to address defined in SRC 1
 0x0b - je - Jump to address defined in SRC 1 if equality bit is set in compare register
-0x0b (INV) - jne - Jump to address defined in SRC 1 if equality bit is not set in compare register
+0x1b (INV) - jne - Jump to address defined in SRC 1 if equality bit is not set in compare register
 0x0c - jl - Jump to address defined in SRC 1 if less-than bit is set in compare register
-0x0c (INV) - jge - Jump to address defined in SRC 1 if less-than bit is not set in compare register
+0x1c (INV) - jge - Jump to address defined in SRC 1 if less-than bit is not set in compare register
 0x0d - jg - Jump to address defined in SRC 1 if greater-than bit is set in compare register
-0x0d (INV) - jle - Jump to address defined in SRC 1 if greater-than bit is not set in compare register
+0x1d (INV) - jle - Jump to address defined in SRC 1 if greater-than bit is not set in compare register
 
 0x0e - wrt - Write the memory at address SRC 2, the data in SRC 1
-0x0e (INV) - push - Write mem at address in sp, the data in SRC 1, increment sp by 1
+0x1e (INV) - push - Write mem at address in sp, the data in SRC 1, increment sp by 1
 0x0f - read - Read mem at address SRC 2, store in DST
-0x0f (INV) - pop - Decrement sp by 1, read mem at address in sp, store in DST. 
+0x1f (INV) - pop - Decrement sp by 1, read mem at address in sp, store in DST. 
 
 Immediate Value Overwrites SRC1
 
@@ -75,7 +75,7 @@ JMPi loop1  | 0xA800 0x0006
 end: (0x0018)
 
 0000 8400 0064 040e 8402 0002 7800 2000
-2410 7c00 b000 0018 0484 1524 b820 00ff
+2410 7c00 b000 0018 0484 1524 b820 ffff
 14a4 2500 f400 000e 9412 0001 a800 0006
 
 2, 3, 5, 7, 
@@ -93,7 +93,7 @@ Future Possible Improvements:
 Floating Point Operations
 Visual Interface
 RAM to PROGRAM pipeline (load programs from RAM into instructions)
-signed support
+Signed support
 Peripheral interface (?)
 
 For 4 bit (x) by 4 bit (y) multiplication
