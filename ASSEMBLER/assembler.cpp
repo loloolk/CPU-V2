@@ -100,7 +100,6 @@ class Assembler {
             return io->in.peek() != EOF;
         }
         if (line == "") {
-            io->write(0);
             return io->in.peek() != EOF;
         }
 
@@ -144,14 +143,13 @@ class Assembler {
         return io->in.peek() != EOF;
     }
     void getTags() {
-        int PC = 0;
+        int PC = 1;
 
         while (io->in.peek() != EOF) {
             int i = 0;
                 
             std::string line = io->read();
             if (line == "") {
-                PC++;
                 continue;
             }
 
