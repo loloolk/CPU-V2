@@ -6,6 +6,7 @@
 struct Opcode {
     uint16_t opcode;
     uint16_t inputs;
+    uint16_t offset;
 };
 
 class Assembler {
@@ -14,7 +15,6 @@ class Assembler {
 
     std::map<std::string, uint16_t> tags;
     std::map<std::string, Opcode> opcodes;
-    std::map<std::string, uint16_t> opcodeOffsets;
     std::map<std::string, uint16_t> registers;
 
     Assembler(IO* io) {
@@ -22,58 +22,31 @@ class Assembler {
          
         this->tags = {};
         this->opcodes = {
-            {"NOOP", {0x0, 0b000}},
-            {"MOV", {0x1, 0b101}},
-            {"NOT", {0x11, 0b101}},
-            {"AND", {0x2, 0b111}},
-            {"NAND", {0x12, 0b111}},
-            {"OR", {0x3, 0b111}},
-            {"NOR", {0x13, 0b111}},
-            {"XOR", {0x4, 0b111}},
-            {"NXOR", {0x14, 0b111}},
-            {"ADD", {0x5, 0b111}},
-            {"SUB", {0x6, 0b111}},
-            {"SHL", {0x7, 0b101}},
-            {"SHR", {0x8, 0b101}},
-            {"CMP", {0x9, 0b110}},
-            {"JMP", {0xa, 0b100}},
-            {"JEQ", {0xb, 0b100}},
-            {"JNE", {0x1b, 0b100}},
-            {"JLT", {0xc, 0b100}},
-            {"JGE", {0x1c, 0b100}},
-            {"JGT", {0xd, 0b100}},
-            {"JLE", {0x1d, 0b100}},
-            {"WRT", {0xe, 0b110}},
-            {"PUSH", {0x1e, 0b100}},
-            {"READ", {0xf, 0b011}},
-            {"POP", {0x1f, 0b001}}
-        };
-        this->opcodeOffsets = {
-            {"NOOP", 1},
-            {"MOV", 1},
-            {"NOT", 1},
-            {"AND", 1},
-            {"NAND", 1},
-            {"OR", 1},
-            {"NOR", 1},
-            {"XOR", 1},
-            {"NXOR", 1},
-            {"ADD", 1},
-            {"SUB", 1},
-            {"SHL", 1},
-            {"SHR", 1},
-            {"CMP", 1},
-            {"JMP", 1},
-            {"JEQ", 1},
-            {"JNE", 1},
-            {"JLT", 1},
-            {"JGE", 1},
-            {"JGT", 1},
-            {"JLE", 1},
-            {"WRT", 1},
-            {"PUSH", 1},
-            {"READ", 1},
-            {"POP", 1}
+            {"NOOP", {0x0 , 0b000, 1}},
+            {"MOV",  {0x1 , 0b101, 1}},
+            {"NOT",  {0x11, 0b101, 1}},
+            {"AND",  {0x2 , 0b111, 1}},
+            {"NAND", {0x12, 0b111, 1}},
+            {"OR",   {0x3 , 0b111, 1}},
+            {"NOR",  {0x13, 0b111, 1}},
+            {"XOR",  {0x4 , 0b111, 1}},
+            {"NXOR", {0x14, 0b111, 1}},
+            {"ADD",  {0x5 , 0b111, 1}},
+            {"SUB",  {0x6 , 0b111, 1}},
+            {"SHL",  {0x7 , 0b101, 1}},
+            {"SHR",  {0x8 , 0b101, 1}},
+            {"CMP",  {0x9 , 0b110, 1}},
+            {"JMP",  {0xa , 0b100, 1}},
+            {"JEQ",  {0xb , 0b100, 1}},
+            {"JNE",  {0x1b, 0b100, 1}},
+            {"JLT",  {0xc , 0b100, 1}},
+            {"JGE",  {0x1c, 0b100, 1}},
+            {"JGT",  {0xd , 0b100, 1}},
+            {"JLE",  {0x1d, 0b100, 1}},
+            {"WRT",  {0xe , 0b110, 1}},
+            {"PUSH", {0x1e, 0b100, 1}},
+            {"READ", {0xf , 0b011, 1}},
+            {"POP",  {0x1f, 0b001, 1}}
         };
         this->registers = {
             {"a", 0x0},
@@ -189,7 +162,7 @@ class Assembler {
                     code = code.substr(0, code.size() - 1);
                 }
 
-                PC += opcodeOffsets[code];
+                PC += opcodes[code].offset;
                 continue;
             }
 
