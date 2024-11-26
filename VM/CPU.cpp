@@ -5,8 +5,8 @@ class CPU {
     public:
     uint16_t registers[8];
     uint16_t cmpReg;
-    uint16_t ROM[1 << 8];
-    uint16_t RAM[1 << 8];
+    uint16_t ROM[1 << 8] = {0};
+    uint16_t RAM[1 << 8] = {0};
 
     uint16_t pc;
 
