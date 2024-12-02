@@ -29,69 +29,79 @@ class CPU {
         while (this->pc < (1 << 16)) {
             uint16_t instruction = ROM[pc];
             
-            bool imm = (instruction >> 15) & 0b1;
-            bool inv = (instruction >> 14) & 0b1;
+            bool imm_src1 = (instruction >> 15) & 0b1;
+            bool imm_src2 = (instruction >> 14) & 0b1;
+            bool inv = (instruction >> 13) & 0b1;
 
-            uint16_t opcode = (instruction >> 10) & 0b1111;
-            uint16_t src1 = (instruction >> 7) & 0b111;
-            uint16_t src2 = (instruction >> 4) & 0b111;
-            uint16_t dest = (instruction >> 1) & 0b111;
+            uint16_t opcode = (instruction >> 9) & 0b1111;
+            uint16_t src1 = (instruction >> 6) & 0b111;
+            uint16_t src2 = (instruction >> 3) & 0b111;
+            uint16_t dest = instruction & 0b111;
 
-            if (imm) {
+            if (imm_src1) {
                 src1 = ROM[++this->pc];
+            }
+            else {
+                src1 = registers[src1];
+            }
+            if (imm_src2) {
+                dest = ROM[++this->pc];
+            }
+            else {
+                dest = registers[dest];
             }
 
             switch (opcode) {
                 case 0b0000: // NOOP
                     break;
                 case 0b0001: // MOV
-                    handleMov(src1, dest, inv, imm);
+                    handleMov(src1, dest, inv);
                     break;
                 case 0b0010: // AND
-                    handleAnd(src1, src2, dest, inv, imm);
+                    handleAnd(src1, src2, dest, inv);
                     break;
                 case 0b0011: // OR
-                    handleOr(src1, src2, dest, inv, imm);
+                    handleOr(src1, src2, dest, inv);
                     break;
                 case 0b0100: // XOR
-                    handleXor(src1, src2, dest, inv, imm);
+                    handleXor(src1, src2, dest, inv);
                     break;
                 case 0b0101: // ADD
-                    handleAdd(src1, src2, dest, inv, imm);
+                    handleAdd(src1, src2, dest, inv);
                     break;
                 case 0b0110: // SUB
-                    handleSub(src1, src2, dest, inv, imm);
+                    handleSub(src1, src2, dest, inv);
                     break;
                 case 0b0111: // SHL
-                    handleShl(src1, dest, inv, imm);
+                    handleShl(src1, dest, inv);
                     break;
                 case 0b1000: // SHR
-                    handleShr(src1, dest, inv, imm);
+                    handleShr(src1, dest, inv);
                     break;
                 case 0b1001: // CMP
-                    handleCmp(src1, src2, imm);
+                    handleCmp(src1, src2);
                     break;
                 case 0b1010: // JMP
-                    handleJmp(src1, imm);
+                    handleJmp(src1);
                     pc--;
                     break;
                 case 0b1011: // JEQ
-                    handleJeq(src1, inv, imm);
+                    handleJeq(src1, inv);
                     pc--;
                     break;
                 case 0b1100: // JL
-                    handleJl(src1, inv, imm);
+                    handleJl(src1, inv);
                     pc--;
                     break;
                 case 0b1101: // JG
-                    handleJg(src1, inv, imm);
+                    handleJg(src1, inv);
                     pc--;
                     break;
                 case 0b1110: // WRITE_RAM
-                    handleWriteRAM(src1, src2, inv, imm);
+                    handleWriteRAM(src1, src2, inv);
                     break;
                 case 0b1111: // READ_RAM
-                    handleReadRAM(src2, dest, inv, imm);
+                    handleReadRAM(src2, dest, inv);
                     break;
                 default:
                     std::cout << "Invalid opcode: " << opcode << std::endl;
@@ -101,272 +111,128 @@ class CPU {
         }
     }
 
-    void handleMov(uint16_t src, uint16_t dest, bool inv, bool imm) {
+    void handleMov(uint16_t src, uint16_t dest, bool inv) {
         if (inv) {
-            if (imm) {
-                registers[dest] = ~src;
-            }
-            else {
-                registers[dest] = ~registers[src];
-            }
+            registers[dest] = ~src;
         }
         else {
-            if (imm) {
-                registers[dest] = src;
-            }
-            else {
-                registers[dest] = registers[src];
-            }
+            registers[dest] = src;
         }
     }
-    void handleAnd(uint16_t src1, uint16_t src2, uint16_t dest, bool inv, bool imm) {
+    void handleAnd(uint16_t src1, uint16_t src2, uint16_t dest, bool inv) {
         if (inv) {
-            if (imm) {
-                registers[dest] = ~(src1 & registers[src2]);
-            }
-            else {
-                registers[dest] = ~(registers[src1] & registers[src2]);
-            }
+            registers[dest] = ~(src1 & src2);
         }
         else {
-            if (imm) {
-                registers[dest] = src1 & registers[src2];
-            }
-            else {
-                registers[dest] = registers[src1] & registers[src2];
-            }
+            registers[dest] = src1 & src2;
         }
     }
-    void handleOr(uint16_t src1, uint16_t src2, uint16_t dest, bool inv, bool imm) {
+    void handleOr(uint16_t src1, uint16_t src2, uint16_t dest, bool inv) {
         if (inv) {
-            if (imm) {
-                registers[dest] = ~(src1 | registers[src2]);
-            }
-            else {
-                registers[dest] = ~(registers[src1] | registers[src2]);
-            }
+            registers[dest] = ~(src1 | src2);
         }
         else {
-            if (imm) {
-                registers[dest] = src1 | registers[src2];
-            }
-            else {
-                registers[dest] = registers[src1] | registers[src2];
-            }
+            registers[dest] = src1 | src2;
         }
     }
-    void handleXor(uint16_t src1, uint16_t src2, uint16_t dest, bool inv, bool imm) {
+    void handleXor(uint16_t src1, uint16_t src2, uint16_t dest, bool inv) {
         if (inv) {
-            if (imm) {
-                registers[dest] = ~(src1 ^ registers[src2]);
-            }
-            else {
-                registers[dest] = ~(registers[src1] ^ registers[src2]);
-            }
+            registers[dest] = ~(src1 ^ src2);
         }
         else {
-            if (imm) {
-                registers[dest] = src1 ^ registers[src2];
-            }
-            else {
-                registers[dest] = registers[src1] ^ registers[src2];
-            }
+            registers[dest] = src1 ^ src2;
         }
     }
-    void handleAdd(uint16_t src1, uint16_t src2, uint16_t dest, bool inv, bool imm) {
+    void handleAdd(uint16_t src1, uint16_t src2, uint16_t dest, bool inv) {
         if (inv) {
-            if (imm) {
-                registers[dest] = ~(src1 + registers[src2]);
-            }
-            else {
-                registers[dest] = ~(registers[src1] + registers[src2]);
-            }
-        } 
+            registers[dest] = ~(src1 + src2);
+        }
         else {
-            if (imm) {
-                registers[dest] = src1 + registers[src2];
-            }
-            else {
-                registers[dest] = registers[src1] + registers[src2];
-            }
+            registers[dest] = src1 + src2;
         }
     }
-    void handleSub(uint16_t src1, uint16_t src2, uint16_t dest, bool inv, bool imm) {
+    void handleSub(uint16_t src1, uint16_t src2, uint16_t dest, bool inv) {
         if (inv) {
-            if (imm) {
-                registers[dest] = ~(src1 - registers[src2]);
-            }
-            else {
-                registers[dest] = ~(registers[src1] - registers[src2]);
-            }
+            registers[dest] = ~(src1 - src2);
         }
         else {
-            if (imm) {
-                registers[dest] = src1 - registers[src2];
-            }
-            else {
-                registers[dest] = registers[src1] - registers[src2];
-            }
+            registers[dest] = src1 - src2;
         }
     }
-    void handleShl(uint16_t src, uint16_t dest, bool inv, bool imm) {
+    void handleShl(uint16_t src, uint16_t dest, bool inv) {
         if (inv) {
-            if (imm) {
-                registers[dest] = ~(src << 1);
-            }
-            else {
-                registers[dest] = ~(registers[src] << 1);
-            }
+            registers[dest] = ~(src << 1);
         }
         else {
-            if (imm) {
-                registers[dest] = src << 1;
-            }
-            else {
-                registers[dest] = registers[src] << 1;
-            }
+            registers[dest] = src << 1;
         }
     }
-    void handleShr(uint16_t src, uint16_t dest, bool inv, bool imm) {
+    void handleShr(uint16_t src, uint16_t dest, bool inv) {
         if (inv) {
-            if (imm) {
-                registers[dest] = ~(src >> 1);
-            }
-            else {
-                registers[dest] = ~(registers[src] >> 1);
-            }
+            registers[dest] = ~(src >> 1);
         }
         else {
-            if (imm) {
-                registers[dest] = src >> 1;
-            }
-            else {
-                registers[dest] = registers[src] >> 1;
-            }
+            registers[dest] = src >> 1;
         }
     }
-    void handleCmp(uint16_t src1, uint16_t src2, bool imm) {
-        if (imm) {
-            cmpReg = (src1 < registers[src2]) << 2 | (src1 == registers[src2]) << 1 | (src1 > registers[src2]);
-        }
-        else {
-            cmpReg = (registers[src1] < registers[src2]) << 2 | (registers[src1] == registers[src2]) << 1 | (registers[src1] > registers[src2]);
-        }
+    void handleCmp(uint16_t src1, uint16_t src2) {
+        cmpReg = (src1 < src2) << 2 | (src1 == src2) << 1 | (src1 > src2);
     }
-    void handleJmp(uint16_t src, bool imm) {
-        if (imm) {
+    void handleJmp(uint16_t src, bool inv) {
+        if (!inv) {
             pc = src;
         }
-        else {
-            pc = registers[src];
-        }
     }
-    void handleJeq(uint16_t src, bool inv, bool imm) {
+    void handleJeq(uint16_t src, bool inv) {
         if (inv) {
-            if (cmpReg != 0b010) {
-                if (imm) {
-                    pc = src;
-                }
-                else {
-                    pc = registers[src];
-                }
+            if (!(cmpReg & 0b10)) {
+                pc = src;
             }
         }
         else {
-            if (cmpReg == 0b010) {
-                if (imm) {
-                    pc = src;
-                }
-                else {
-                    pc = registers[src];
-                }
+            if (cmpReg & 0b10) {
+                pc = src;
             }
         }
     }
-    void handleJl(uint16_t src, bool inv, bool imm) {
+    void handleJl(uint16_t src, bool inv) {
         if (inv) {
-            if (cmpReg != 0b100) {
-                if (imm) {
-                    pc = src;
-                }
-                else {
-                    pc = registers[src];
-                }
+            if (!(cmpReg & 0b100)) {
+                pc = src;
             }
         }
         else {
-            if (cmpReg == 0b100) {
-                if (imm) {
-                    pc = src;
-                }
-                else {
-                    pc = registers[src];
-                }
+            if (cmpReg & 0b100) {
+                pc = src;
             }
         }
     }
-    void handleJg(uint16_t src, bool inv, bool imm) {
+    void handleJg(uint16_t src, bool inv) {
         if (inv) {
-            if (cmpReg != 0b001) {
-                if (imm) {
-                    pc = src;
-                }
-                else {
-                    pc = registers[src];
-                }
+            if (!(cmpReg & 0b1)) {
+                pc = src;
             }
         }
         else {
-            if (cmpReg == 0b001) {
-                if (imm) {
-                    pc = src;
-                }
-                else {
-                    pc = registers[src];
-                }
+            if (cmpReg & 0b1) {
+                pc = src;
             }
         }
     }
-    void handleWriteRAM(uint16_t src1, uint16_t src2, bool inv, bool imm) {
+    void handleWriteRAM(uint16_t src1, uint16_t src2, bool inv) {
         if (inv) { // PUSH
-            if (imm) {
-                RAM[registers[7]] = src1;
-                registers[7]++;
-                std::cout << "PUSH: " << src1 << std::endl;
-            }
-            else {
-                RAM[registers[7]] = registers[src1];
-                registers[7]++;
-                std::cout << "PUSH: " << registers[src1] << std::endl;
-            }
+            RAM[registers[7]++] = src1;
         }
         else {
-            if (imm) {
-                RAM[registers[src2]] = src1;
-            }
-            else {
-                RAM[registers[src2]] = registers[src1];
-            }
+            RAM[src1] = src2;
         }
     }
-    void handleReadRAM(uint16_t src2, uint16_t dest, bool inv, bool imm) {
+    void handleReadRAM(uint16_t src2, uint16_t dest, bool inv) {
         if (inv) { // POP
-            if (imm) {
-                registers[7]--;
-                registers[dest] = RAM[registers[7]];
-            }
-            else {
-                registers[7]--;
-                registers[dest] = RAM[registers[7]];
-            }
+            registers[dest] = RAM[--registers[7]];
         }
         else {
-            if (imm) {
-                registers[dest] = RAM[registers[src2]];
-            }
-            else {
-                registers[dest] = RAM[registers[src2]];
-            }
+            registers[dest] = RAM[src2];
         }
     }
 };
