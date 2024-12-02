@@ -1,5 +1,5 @@
 Fixed Length Instruction Encoding
-1 - Immediate Value, 1 - Inverter, 4 - OPCODE, 3 - SRC1, 3 - SRC2, 3 - DST, 1- NULL
+1 - Immediate SRC1, 1 - Immediate SRC2, 1 - Inverter, 4 - OPCODE, 3 - SRC1, 3 - SRC2, 3 - DST
 
 Reg Codes:
 0-7: a, b, c, d, e, f, bp, sp
@@ -42,59 +42,13 @@ Immediate Value Overwrites SRC1
 Sub Commands:
 res - Resets register by xoring it with itself (same as mov 0, 1 clock tick faster)
 
-Fibonacci sequence:
-0000 8402 0001 1414 7900 0480 0502 a800
-0003
-
-Prime Number Solver (Pseudo Code):
-0x0000
-imm 100->R0 | 0x8400 0x0064
-mov R0->SP  | 0x040E
-
-imm 2->R1   | 0x8402 0x0002
-
-loop1: (0x0006)
-PUSH R0     | 0x7800
-SHR R0->R0  | 0x2000
-CMP R0 R1   | 0x2410
-POP R0      | 0x7C00
-JLi end     | 0xB000 0x0018
-
-mov R1->R2   | 0x0484
-Add R2+R2->R2| 0x1524
-
-loop2: (0x000e)
-WRTi 0x00ff, [R2] | 0xB820 0x00FF
-ADD R1+R2->R2 | 0x14A4
-CMP R2 R0   | 0x2500
-JLEi loop2  | 0xF400 0x000E
-
-ADDi 1+R1->R1 | 0x9412 0x0001
-JMPi loop1  | 0xA800 0x0006
-
-end: (0x0018)
-
-0000 8400 0064 040e 8402 0002 7800 2000
-2410 7c00 b000 0018 0484 1524 b820 ffff
-14a4 2500 f400 000e 9412 0001 a800 0006
-
-2, 3, 5, 7, 
-11, 13, 17, 19, 
-23, 29, 
-31, 37, 
-41, 43, 47, 
-53, 59, 
-61, 67, 
-71, 73, 79, 
-83, 89, 
-97
-
 Future Possible Improvements:
 Floating Point Operations
 Visual Interface
 RAM to PROGRAM pipeline (load programs from RAM into instructions)
 Signed support
 Peripheral interface (?)
+Support for immediate values on SRC2
 
 For 4 bit (x) by 4 bit (y) multiplication
 for i=0-4 {
