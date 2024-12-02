@@ -23,17 +23,17 @@ Registers: a, b, c, d, e, f, bp, sp
 - `NOOP` : No operation
 - `MOV(i)` `[Register/Value]` `[Register]` : Move a register/value to a register
 - `NOT(i)` `[Register/Value]` `[Register]` : Negate a register
-- `AND(i)` `[Register/Value]` `[Register]` `[Register]` : Bitwise AND
-- `NAND(i)` `[Register/Value]` `[Register]` `[Register]` : Bitwise NAND
-- `OR(i)` `[Register/Value]` `[Register]` `[Register]` : Bitwise OR
-- `NOR(i)` `[Register/Value]` `[Register]` `[Register]` : Bitwise NOR
-- `XOR(i)` `[Register/Value]` `[Register]` `[Register]` : Bitwise XOR
-- `XNOR(i)` `[Register/Value]` `[Register]` `[Register]` : Bitwise XNOR
-- `ADD(i)` `[Register/Value]` `[Register]` `[Register]` : Add a register/value to a register
-- `SUB(i)` `[Register/Value]` `[Register]` `[Register]` : Subtract a register/value from a register **__*__**
-- `SHL(i)` `[Register/Value]` `[Register]` `[Register]` : Shift left
-- `SHR(i)` `[Register/Value]` `[Register]` `[Register]` : Shift right
-- `CMP(i)` `[Register/Value]` `[Register]` `[Register]` : Compare two registers
+- `AND(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise AND
+- `NAND(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise NAND
+- `OR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise OR
+- `NOR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise NOR
+- `XOR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise XOR
+- `XNOR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise XNOR
+- `ADD(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Add a register/value to a register
+- `SUB(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Subtract a register/value from a register **__*__**
+- `SHL(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Shift left
+- `SHR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Shift right
+- `CMP(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Compare two registers
 - `JMP(i)` `[Register/Value]` : Jump to a register/value
 - `JEQ(i)` `[Register/Value]` : Jump if the equality flag is set in the previous CMP instruction
 - `JNE(i)` `[Register/Value]` : Jump if the equality flag is not set in the previous CMP instruction
@@ -46,7 +46,6 @@ Registers: a, b, c, d, e, f, bp, sp
 - `READ(i)` `[Register]` : Read a value from the memory to a register
 - `POP(i)` `[Register]` : Pop a value from the stack to a register
 
-**__*NOTE__**: subtracks the register value from the immediate value, not the other way around
 
 ---
 ## Example Programs:
@@ -55,21 +54,20 @@ Registers: a, b, c, d, e, f, bp, sp
 
 `input.txt`:
 ```assembly
-MOVi 0 a
-MOVi 1 b
+iMOV 1, b
 
-#loop
+#start
 ADD a b c
 PUSH c
 MOV b a
 MOV c b
-JMPi loop
+iJMP start
 ```
 
 `output.txt (+ formatting)`:
 ```
-0000 8400 0000 8402 0001 1414 7900 0480
-0502 a800 0005 0000 0000 0000 0000 0000
+0000 8201 0001 0a0a 3c80 0240 0281 9400
+0003 0000 0000 0000 0000 0000 0000 0000
 ```
 </details>
 
@@ -79,37 +77,37 @@ JMPi loop
 `input.txt`:
 ```assembly
 #start
-MOVi 100 a
+iMOV 100 a
 MOV a sp
-MOVi 2 b
+iMOV 2 b
 
 #checkcondition
 PUSH a
 SHR a a
 CMP a b
 POP a
-JLTi end
+iJLT end
 
 MOV b c
 SHL c c
 
 #loop
-WRTi 65535 c
+iWRT 65535 c
 ADD b c c
 CMP c a
-JLTi loop
+iJLT loop
 
-ADDi 1 b b
-JMPi checkcondition
+ADDi b 1 b
+iJMP checkcondition
 
 #end
 ```
 
 `output.txt (+ formatting)`:
 ```
-0000 8400 0064 040e 8402 0002 7800 2000
-2410 7c00 b000 0018 0484 1d04 b820 ffff
-14a4 2500 b000 000e 9412 0001 a800 0006
+0000 8200 0064 0207 8201 0002 3c00 1000
+1208 3e00 9800 0018 0242 0e82 9c10 ffff
+0a52 1280 9800 000e 4a41 0001 9400 0006
 ```
 </details>
 
