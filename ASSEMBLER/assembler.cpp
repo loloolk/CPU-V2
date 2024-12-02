@@ -105,38 +105,49 @@ class Assembler {
         int i = 0;
         std::string op = getChunk(line, i);
 
-        bool immediate = op[op.size() - 1] == 'i';
+        bool imm_src1 = op[0] == 'i';
+        bool imm_src2 = op[op.size() - 1] == 'i';
 
-        if (immediate) {
-            command |= 1 << 15;
-
-            op = op.substr(0, op.size() - 1);
+        if (imm_src1) {
+            op = op.substr(1);
+            command |= 0x1 << 15;
         }
-        command |= opcodes[op].opcode << 10;
+        if (imm_src2) {
+            op = op.substr(0, op.size() - 1);
+            command |= 0x1 << 14;
+        }
+        command |= opcodes[op].opcode << 9;
 
-        uint16_t src;
+        uint16_t src1;
         if (opcodes[op].inputs & 0b100) {
-            std::string src1 = getChunk(line, i);
-            src = handleSrc(src1, immediate);
-            if (!immediate) {
-                command |= src << 7;
+            std::string src = getChunk(line, i);
+            src1 = handleSrc(src, imm_src1);
+            if (!imm_src1) {
+                command |= src1 << 6;
             }
         }
 
+        uint16_t src2;
         if (opcodes[op].inputs & 0b10) {
-            std::string src2 = getChunk(line, i);
-            command |= handleSrc(src2) << 4;
+            std::string src = getChunk(line, i);
+            src2 = handleSrc(src, imm_src2);
+            if (!imm_src2) {
+                command |= src2 << 3;
+            }
         }
 
         if (opcodes[op].inputs & 0b1) {
             std::string dest = getChunk(line, i);
-            command |= handleSrc(dest) << 1;
+            command |= handleSrc(dest);
         }
 
         io->write(command);
 
-        if (opcodes[op].inputs & 0b100 && immediate) {
-            io->write(src);
+        if (opcodes[op].inputs & 0b100 && imm_src1) {
+            io->write(src1);
+        }
+        if (opcodes[op].inputs & 0b10 && imm_src2) {
+            io->write(src2);
         }
 
         return io->in.peek() != EOF;
@@ -154,6 +165,10 @@ class Assembler {
 
             std::string code = getChunk(line, i);
             if (line[0] != '#') {
+                if (code[0] == 'i') {
+                    PC++;
+                    code = code.substr(1);
+                }
                 if (code[code.size() - 1] == 'i') {
                     PC++;
                     code = code.substr(0, code.size() - 1);

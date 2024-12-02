@@ -1,25 +1,25 @@
 #start
-MOVi 100 a
+iMOV 100 a
 MOV a sp
-MOVi 2 b
+iMOV 2 b
 
 #checkcondition
 PUSH a
 SHR a a
 CMP a b
 POP a
-JLTi end
+iJLT end
 
 MOV b c
 SHL c c
 
 #loop
-WRTi 65535 c
+iWRT 65535 c
 ADD b c c
 CMP c a
-JLTi loop
+iJLT loop
 
-ADDi 1 b b
-JMPi checkcondition
+ADDi b 1 b
+iJMP checkcondition
 
 #end
