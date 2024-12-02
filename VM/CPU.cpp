@@ -45,10 +45,10 @@ class CPU {
                 src1 = registers[src1];
             }
             if (imm_src2) {
-                dest = ROM[++this->pc];
+                src2 = ROM[++this->pc];
             }
             else {
-                dest = registers[dest];
+                src2 = registers[src2];
             }
 
             switch (opcode) {
@@ -82,7 +82,7 @@ class CPU {
                     handleCmp(src1, src2);
                     break;
                 case 0b1010: // JMP
-                    handleJmp(src1);
+                    handleJmp(src1, inv);
                     pc--;
                     break;
                 case 0b1011: // JEQ
@@ -224,7 +224,7 @@ class CPU {
             RAM[registers[7]++] = src1;
         }
         else {
-            RAM[src1] = src2;
+            RAM[src2] = src1;
         }
     }
     void handleReadRAM(uint16_t src2, uint16_t dest, bool inv) {
