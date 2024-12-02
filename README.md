@@ -46,6 +46,7 @@ Registers: a, b, c, d, e, f, bp, sp
 - `READ(i)` `[Register]` : Read a value from the memory to a register
 - `POP(i)` `[Register]` : Pop a value from the stack to a register
 
+**__NOTE:__** Subtracting computes SRC1 - SRC2, not SRC2 - SRC1
 
 ---
 ## Example Programs:
