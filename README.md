@@ -21,30 +21,30 @@ A 16-bit CPU, made with logisim evolution. This contains the CPU's Circuitry in 
 Registers: a, b, c, d, e, f, bp, sp
 
 - `NOOP` : No operation
-- `MOV(i)` `[Register/Value]` `[Register]` : Move a register/value to a register
-- `NOT(i)` `[Register/Value]` `[Register]` : Negate a register
-- `AND(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise AND
-- `NAND(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise NAND
-- `OR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise OR
-- `NOR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise NOR
-- `XOR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise XOR
-- `XNOR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise XNOR
-- `ADD(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Add a register/value to a register
-- `SUB(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Subtract a register/value from a register **__*__**
-- `SHL(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Shift left
-- `SHR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Shift right
-- `CMP(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Compare two registers
-- `JMP(i)` `[Register/Value]` : Jump to a register/value
-- `JEQ(i)` `[Register/Value]` : Jump if the equality flag is set in the previous CMP instruction
-- `JNE(i)` `[Register/Value]` : Jump if the equality flag is not set in the previous CMP instruction
-- `JGT(i)` `[Register/Value]` : Jump if the greater flag is set in the previous CMP instruction
-- `JGE(i)` `[Register/Value]` : Jump if the greater or equal flag is set in the previous CMP instruction
-- `JLT(i)` `[Register/Value]` : Jump if the less flag is set in the previous CMP instruction
-- `JLE(i)` `[Register/Value]` : Jump if the less or equal flag is set in the previous CMP instruction
-- `WRT(i)` `[Register/Value]` `[Register]` : Write a register/value to the memory
-- `PUSH(i)` `[Register/Value]` : Push a register/value to the stack
-- `READ(i)` `[Register]` : Read a value from the memory to a register
-- `POP(i)` `[Register]` : Pop a value from the stack to a register
+- `(i)MOV` `[Register/Value]` `[Register]` : Move a register/value to a register
+- `(i)NOT` `[Register/Value]` `[Register]` : Negate a register
+- `(i)AND(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise AND
+- `(i)NAND(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise NAND
+- `(i)OR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise OR
+- `(i)NOR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise NOR
+- `(i)XOR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise XOR
+- `(i)XNOR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Bitwise XNOR
+- `(i)ADD(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Add a register/value to a register
+- `(i)SUB(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Subtract a register/value from a register **__*__**
+- `(i)SHL(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Shift left
+- `(i)SHR(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Shift right
+- `(i)CMP(i)` `[Register/Value]` `[Register/Value]` `[Register]` : Compare two registers
+- `(i)JMP` `[Register/Value]` : Jump to a register/value's address
+- `(i)JEQ` `[Register/Value]` : Jump if the equality flag is set in the previous CMP instruction
+- `(i)JNE` `[Register/Value]` : Jump if the equality flag is not set in the previous CMP instruction
+- `(i)JGT` `[Register/Value]` : Jump if the greater flag is set in the previous CMP instruction
+- `(i)JGE` `[Register/Value]` : Jump if the greater or equal flag is set in the previous CMP instruction
+- `(i)JLT` `[Register/Value]` : Jump if the less flag is set in the previous CMP instruction
+- `(i)JLE` `[Register/Value]` : Jump if the less or equal flag is set in the previous CMP instruction
+- `(i)WRT(i)` `[Register/Value]` `[Register/Value]` : Write a register/value to the memory
+- `(i)PUSH` `[Register/Value]` `[Register]` : Push a register/value to the stack
+- `READ(i)` `[Register/Value]` `[Register]` : Read a value from the memory address to a register
+- `POP` `[Register]` : Pop a value from the stack to a register
 
 **__NOTE:__** Subtracting computes SRC1 - SRC2, not SRC2 - SRC1
 
