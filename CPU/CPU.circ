@@ -979,7 +979,7 @@
     <comp loc="(1650,20)" name="REG_Decoder"/>
     <comp loc="(1650,200)" name="REG_Decoder"/>
     <comp loc="(1650,380)" name="REG_Decoder"/>
-    <comp loc="(570,490)" name="IMM_SAVE2"/>
+    <comp loc="(570,490)" name="IMM_SAVE"/>
     <comp loc="(640,1190)" name="Buffering"/>
     <comp loc="(860,1150)" name="Buffering"/>
     <comp loc="(870,280)" name="CPU_Decoder"/>
@@ -1810,109 +1810,6 @@
     <a name="circuit" val="IMM_SAVE"/>
     <a name="circuitnamedboxfixedsize" val="true"/>
     <a name="simulationFrequency" val="1.0"/>
-    <comp lib="0" loc="(1080,520)" name="Pin">
-      <a name="appearance" val="NewPins"/>
-      <a name="facing" val="west"/>
-      <a name="label" val="IMM_ENABLE"/>
-      <a name="output" val="true"/>
-    </comp>
-    <comp lib="0" loc="(200,290)" name="Pin">
-      <a name="appearance" val="NewPins"/>
-      <a name="label" val="IMM_VAL"/>
-    </comp>
-    <comp lib="0" loc="(200,570)" name="Pin">
-      <a name="appearance" val="NewPins"/>
-      <a name="label" val="INSTR_IN"/>
-      <a name="radix" val="16"/>
-      <a name="width" val="16"/>
-    </comp>
-    <comp lib="0" loc="(200,720)" name="Pin">
-      <a name="appearance" val="NewPins"/>
-      <a name="label" val="Clock"/>
-    </comp>
-    <comp lib="0" loc="(200,810)" name="Pin">
-      <a name="appearance" val="NewPins"/>
-      <a name="label" val="Reset"/>
-    </comp>
-    <comp lib="0" loc="(240,720)" name="Tunnel">
-      <a name="label" val="CLOCK"/>
-    </comp>
-    <comp lib="0" loc="(240,810)" name="Tunnel">
-      <a name="label" val="RESET"/>
-    </comp>
-    <comp lib="0" loc="(440,610)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="CLOCK"/>
-    </comp>
-    <comp lib="0" loc="(480,330)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="CLOCK"/>
-    </comp>
-    <comp lib="0" loc="(510,660)" name="Tunnel">
-      <a name="facing" val="north"/>
-      <a name="label" val="RESET"/>
-    </comp>
-    <comp lib="0" loc="(530,380)" name="Tunnel">
-      <a name="facing" val="north"/>
-      <a name="label" val="RESET"/>
-    </comp>
-    <comp lib="0" loc="(670,280)" name="Tunnel">
-      <a name="label" val="IMM_EN"/>
-    </comp>
-    <comp lib="0" loc="(710,480)" name="Pin">
-      <a name="appearance" val="NewPins"/>
-      <a name="facing" val="west"/>
-      <a name="output" val="true"/>
-      <a name="radix" val="16"/>
-      <a name="width" val="16"/>
-    </comp>
-    <comp lib="0" loc="(990,520)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="IMM_EN"/>
-    </comp>
-    <comp lib="1" loc="(360,280)" name="AND Gate">
-      <a name="size" val="30"/>
-    </comp>
-    <comp lib="1" loc="(510,250)" name="NOT Gate">
-      <a name="facing" val="west"/>
-    </comp>
-    <comp lib="4" loc="(480,540)" name="Register">
-      <a name="appearance" val="logisim_evolution"/>
-      <a name="width" val="16"/>
-    </comp>
-    <comp lib="4" loc="(510,270)" name="D Flip-Flop">
-      <a name="appearance" val="logisim_evolution"/>
-      <a name="trigger" val="falling"/>
-    </comp>
-    <wire from="(200,290)" to="(330,290)"/>
-    <wire from="(200,570)" to="(480,570)"/>
-    <wire from="(200,720)" to="(240,720)"/>
-    <wire from="(200,810)" to="(240,810)"/>
-    <wire from="(330,250)" to="(330,270)"/>
-    <wire from="(330,250)" to="(510,250)"/>
-    <wire from="(360,280)" to="(360,590)"/>
-    <wire from="(360,280)" to="(500,280)"/>
-    <wire from="(360,590)" to="(480,590)"/>
-    <wire from="(440,610)" to="(480,610)"/>
-    <wire from="(480,330)" to="(490,330)"/>
-    <wire from="(490,320)" to="(490,330)"/>
-    <wire from="(490,320)" to="(500,320)"/>
-    <wire from="(510,630)" to="(510,660)"/>
-    <wire from="(530,330)" to="(530,380)"/>
-    <wire from="(540,250)" to="(620,250)"/>
-    <wire from="(540,570)" to="(700,570)"/>
-    <wire from="(560,280)" to="(620,280)"/>
-    <wire from="(620,250)" to="(620,280)"/>
-    <wire from="(620,280)" to="(670,280)"/>
-    <wire from="(700,480)" to="(700,570)"/>
-    <wire from="(700,480)" to="(710,480)"/>
-    <wire from="(990,520)" to="(1080,520)"/>
-  </circuit>
-  <circuit name="IMM_SAVE2">
-    <a name="appearance" val="logisim_evolution"/>
-    <a name="circuit" val="IMM_SAVE2"/>
-    <a name="circuitnamedboxfixedsize" val="true"/>
-    <a name="simulationFrequency" val="1.0"/>
     <comp lib="0" loc="(1030,810)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="INSTR_IN"/>
@@ -2171,7 +2068,7 @@
     <comp lib="1" loc="(1300,440)" name="OR Gate">
       <a name="size" val="30"/>
     </comp>
-    <comp lib="1" loc="(1300,440)" name="OR Gate">
+    <comp lib="1" loc="(1310,450)" name="OR Gate">
       <a name="size" val="30"/>
     </comp>
     <comp lib="1" loc="(180,220)" name="OR Gate">
