@@ -11,7 +11,7 @@ A 16-bit CPU, made with logisim evolution. This contains the CPU's Circuitry in 
 1) Download [logisim evolution](https://github.com/logisim-evolution/logisim-evolution)
 2) Open `CPU/CPU.circ` in logisim evolution
 3) Open `Assembler/input.txt` and put in your code
-4) Run the `Assembler/main.c` file
+4) Run the `Assembler/main.cpp` file
 5) Copy the `Assembler/outut.txt` into the Program Input chip
 6) Run the CPU
 
