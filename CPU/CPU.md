@@ -36,11 +36,8 @@ OPCODES:
 
 NOTE: Inverter bit can still be active on addition and subtraction operations, in which case it will invert the result.
 
-Immediate Value Overwrites SRC1
-
 Future Possible Improvements:
 Floating Point Operations
 Visual Interface
-RAM to PROGRAM pipeline (load programs from RAM into instructions)
 Signed support
 Peripheral interface
