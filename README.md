@@ -56,6 +56,7 @@ Registers: a, b, c, d, e, f, bp, sp
 `input.txt`:
 ```assembly
 iMOV 1, b
+ADDi sp 10 sp
 
 #start
 ADD a b c
@@ -67,8 +68,8 @@ iJMP start
 
 `output.txt (+ formatting)`:
 ```
-0000 8201 0001 0a0a 3c80 0240 0281 9400
-0003 0000 0000 0000 0000 0000 0000 0000
+0000 8201 0001 4bc7 000a 0a0a 3c80 0240
+0281 9400 0005 0000 0000 0000 0000 0000
 ```
 </details>
 
@@ -79,36 +80,43 @@ iJMP start
 ```assembly
 #start
 iMOV 100 a
-MOV a sp
+iMOV 210 sp
 iMOV 2 b
+
+#removemultiples
+ADDi c 100 c
+iWRT 65535 c
+SUBi c 100 c
+ADD b c c
+CMP c a
+iJLT removemultiples
+
+#nextnumber
+ADDi b 101 b
+READ b c
+SUBi b 100 b
+CMPi c 65535
+iJEQ nextnumber
 
 #checkcondition
 PUSH a
 SHR a a
 CMP a b
 POP a
-iJLT end
+iJLT 300
 
 MOV b c
 SHL c c
-
-#loop
-iWRT 65535 c
-ADD b c c
-CMP c a
-iJLT loop
-
-ADDi b 1 b
-iJMP checkcondition
-
-#end
+iJMP removemultiples
 ```
 
 `output.txt (+ formatting)`:
 ```
-0000 8200 0064 0207 8201 0002 3c00 1000
-1208 3e00 9800 0018 0242 0e82 9c10 ffff
-0a52 1280 9800 000e 4a41 0001 9400 0006
+0000 8200 0064 8207 00d2 8201 0002 4a82
+0064 9c10 ffff 4c82 0064 0a52 1280 9800
+0007 4a41 0065 1e0a 4c41 0064 5280 ffff
+9600 0011 3c00 1000 1208 3e00 9800 012c
+0242 0e82 9400 0007 0000 0000 0000 0000
 ```
 </details>
 
