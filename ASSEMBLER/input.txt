@@ -1,50 +1,31 @@
+~10
 #start
-iMOV 0 sp
-MOV sp bp
+iMOV 100 a
+iMOV 210 sp
+iMOV 2 b
 
-iPUSH tag1
-iPUSH fib_sequence
-iJMP ensure_stack_continuity_start
-#tag1
+#removemultiples
+ADDi c 100 c
+iWRT 65535 c
+SUBi c 100 c
+ADD b c c
+CMP c a
+iJLT removemultiples
 
+#nextnumber
+ADDi b 101 b
+READ b c
+SUBi b 100 b
+CMPi c 65535
+iJEQ nextnumber
 
-iPUSH 21930
-iJMP end
-
-
-#fib_sequence
-iMOV 1, b
-#fib_sequence_start
-ADD a b c
-MOV b a
-MOV c b
-CMPi c 100
-iJGT ensure_stack_continuity_end
-iJMP fib_sequence_start
-
-
-#ensure_stack_continuity_start
-POP b
-POP a
-PUSH bp
-PUSH sp
-MOV sp bp
+#checkcondition
 PUSH a
-iPUSH 5577
-JMP b
-
-
-#ensure_stack_continuity_end
-POP b
-#ensure_stack_continuity_end_loop1
+SHR a a
+CMP a b
 POP a
-CMPi a 5577
-iJNE ensure_stack_continuity_end_loop1
-POP a
-POP a
-POP sp
-POP bp
-JMP a
+iJLT 300
 
-
-#end
+MOV b c
+SHL c c
+iJMP removemultiples

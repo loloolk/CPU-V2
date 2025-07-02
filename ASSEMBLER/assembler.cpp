@@ -95,10 +95,17 @@ class Assembler {
         uint16_t command = 0;
 
         std::string line = io->read();
+        if (line == "") {
+            return io->in.peek() != EOF;
+        }
         if (line[0] == '#') {
             return io->in.peek() != EOF;
         }
-        if (line == "") {
+        if (line[0] == '~') {
+            line = line.substr(1);
+            for (int i = 0; i < std::stoi(line); i++) {
+                io->write(0);
+            }
             return io->in.peek() != EOF;
         }
 
@@ -165,6 +172,12 @@ class Assembler {
 
             std::string code = getChunk(line, i);
             if (line[0] != '#') {
+                if (code[0] == '~') {
+                    code = code.substr(1);
+                    PC += std::stoi(code);
+                    continue;
+                }
+
                 if (code[0] == 'i') {
                     PC++;
                     code = code.substr(1);
