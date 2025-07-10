@@ -1,15 +1,19 @@
-#include <iostream>
-#include <string>
-#include <map>
-#include "IO.cpp"
+#pragma once
 
-struct Opcode {
+#include <string>
+#include <vector>
+#include <map>
+#include <tuple>
+#include "tokenizer.cpp"
+
+#include <iostream>
+
+struct Instruction {
     uint16_t opcode;
     uint16_t inputs;
     uint16_t offset;
 };
-
-static std::map<std::string, Opcode> opcodes = {
+static std::map<std::string, Instruction> instructions = {
     // STANDARD OPCODES
     {"NOOP", {0x0 , 0b000, 1}},
     {"MOV",  {0x1 , 0b101, 1}},
@@ -51,157 +55,249 @@ static std::map<std::string, uint16_t> registers = {
 class Assembler {
     public:
     IO* io;
+    Tokenizer* tokenizer;
 
-    std::map<std::string, uint16_t> tags;
+    int locationCounter = 1; // Current instruction index
+
+    std::map<std::string, uint16_t> labels;
 
     Assembler(IO* io) {
         this->io = io;
-        this->tags = {};
+        this->tokenizer = new Tokenizer(io);
+        
+        this->locationCounter = 1;
+
+        this->labels = {};
     }
-
-    std::string getChunk(std::string line, int& i) {
-        std::string chunk = "";
-        for (; i < line.size(); i++) {
-            if (line[i] == ' ') {
-                break;
-            }
-            chunk += line[i];
-        }
-        i++;
-        return chunk;
-    }
-
-    uint16_t handleSrc(std::string src, bool immediate = false) {
-        if (immediate) {
-            if (isdigit(src[0])) {
-                return std::stoi(src);
-            }
-            else if (tags.find(src) != tags.end()) {
-                return tags[src];
-            }
-
-            io->write(0xdead);
-            exit(1);
-        }
-        if (registers.find(src) != registers.end()) {
-            return registers[src];
-        }
-
-        io->write(0xdead);
-        exit(1);
-    }
-
-    bool assembleLine() {
-        uint16_t command = 0;
-
-        std::string line = io->read();
-        if (line == "") {
-            return io->in.peek() != EOF;
-        }
-        if (line[0] == '#') {
-            return io->in.peek() != EOF;
-        }
-        if (line[0] == '~') {
-            line = line.substr(1);
-            for (int i = 0; i < std::stoi(line); i++) {
-                io->write(0);
-            }
-            return io->in.peek() != EOF;
-        }
-
-        int i = 0;
-        std::string op = getChunk(line, i);
-
-        bool imm_src1 = op[0] == 'i';
-        bool imm_src2 = op[op.size() - 1] == 'i';
-
-        if (imm_src1) {
-            op = op.substr(1);
-            command |= 0x1 << 15;
-        }
-        if (imm_src2) {
-            op = op.substr(0, op.size() - 1);
-            command |= 0x1 << 14;
-        }
-        command |= opcodes[op].opcode << 9;
-
-        uint16_t src1;
-        if (opcodes[op].inputs & 0b100) {
-            std::string src = getChunk(line, i);
-            src1 = handleSrc(src, imm_src1);
-            if (!imm_src1) {
-                command |= src1 << 6;
-            }
-        }
-
-        uint16_t src2;
-        if (opcodes[op].inputs & 0b10) {
-            std::string src = getChunk(line, i);
-            src2 = handleSrc(src, imm_src2);
-            if (!imm_src2) {
-                command |= src2 << 3;
-            }
-        }
-
-        if (opcodes[op].inputs & 0b1) {
-            std::string dest = getChunk(line, i);
-            command |= handleSrc(dest);
-        }
-
-        io->write(command);
-
-        if (opcodes[op].inputs & 0b100 && imm_src1) {
-            io->write(src1);
-        }
-        if (opcodes[op].inputs & 0b10 && imm_src2) {
-            io->write(src2);
-        }
-
-        return io->in.peek() != EOF;
-    }
-    void getTags() {
-        int PC = 1;
-
-        while (io->in.peek() != EOF) {
-            int i = 0;
-                
-            std::string line = io->read();
-            if (line == "") {
-                continue;
-            }
-
-            std::string code = getChunk(line, i);
-            if (line[0] != '#') {
-                if (code[0] == '~') {
-                    code = code.substr(1);
-                    PC += std::stoi(code);
-                    continue;
-                }
-
-                if (code[0] == 'i') {
-                    PC++;
-                    code = code.substr(1);
-                }
-                if (code[code.size() - 1] == 'i') {
-                    PC++;
-                    code = code.substr(0, code.size() - 1);
-                }
-
-                PC += opcodes[code].offset;
-                continue;
-            }
-
-            tags[line.substr(1)] = PC;
-        }
-
-        io->in.clear();
-        io->in.seekg(0);
+    ~Assembler() {
+        delete tokenizer;
     }
 
     void assemble() {
-        getTags();
-        
+        std::tuple<TOKEN_TYPE, std::string> token;
         io->write(0);
-        while (assembleLine()) {}
+
+        // First pass: Collect labels and handle memory offsets
+        while (std::get<0>(token = this->tokenizer->nextTokenLog()) != TOKEN_EOF) {
+
+            if (std::get<0>(token) == TOKEN_TAG) {
+                // Handle label definition
+                token = this->tokenizer->nextTokenLog();
+                if (std::get<0>(token) != TOKEN_ID) {
+                    throw std::runtime_error("Expected label name after tag at line " + std::to_string(this->tokenizer->lineNumber));
+                }
+
+                this->labels[std::get<1>(token)] = this->locationCounter;
+
+                token = this->tokenizer->nextTokenLog();
+                if (std::get<0>(token) != TOKEN_COLON) {
+                    throw std::runtime_error("Expected colon after label at line " + std::to_string(this->tokenizer->lineNumber));
+                }
+                continue;
+            }
+            else if (std::get<0>(token) == TOKEN_TILDE) {
+                // handle memory offset
+                token = this->tokenizer->nextTokenLog();
+                if (std::get<0>(token) != TOKEN_NUMBER) {
+                    throw std::runtime_error("Expected number after tilde at line " + std::to_string(this->tokenizer->lineNumber));
+                }
+
+                int offset = this->parseNumber(std::get<1>(token));
+                this->locationCounter += offset;
+
+                token = this->tokenizer->nextTokenLog();
+                if (std::get<0>(token) != TOKEN_SEMICOLON) {
+                    throw std::runtime_error("Expected semicolon after tilde at line " + std::to_string(this->tokenizer->lineNumber));
+                }
+
+                continue;
+            }
+        
+            if (std::get<0>(token) != TOKEN_ID) {
+                throw std::runtime_error("Expected instruction name at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+
+            std::string instructionName = std::get<1>(token);
+            
+            if (instructionName[0] == 'i') {
+                // Handle immediate instruction
+                instructionName = instructionName.substr(1);
+                this->locationCounter++;
+            }
+            if (instructionName[instructionName.size() - 1] == 'i') {
+                // Handle immediate instruction
+                instructionName = instructionName.substr(0, instructionName.size() - 1);
+                this->locationCounter++;
+            }
+            if (instructions.find(instructionName) == instructions.end()) {
+                throw std::runtime_error("Unknown instruction: " + instructionName + " at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+            
+            Instruction instruction = instructions[instructionName];
+            this->locationCounter += instruction.offset;
+            
+            for (int i = 0; i < 3; i++) {
+                if (instruction.inputs & (1 << i)) {
+                    token = this->tokenizer->nextTokenLog();
+                    if (std::get<0>(token) != TOKEN_ID && std::get<0>(token) != TOKEN_NUMBER) {
+                        throw std::runtime_error("Expected input for instruction " + instructionName + " at line " + std::to_string(this->tokenizer->lineNumber));
+                    }
+                }
+            }
+
+            token = this->tokenizer->nextTokenLog();
+            if (std::get<0>(token) != TOKEN_SEMICOLON) {
+                throw std::runtime_error("Expected semicolon after instruction " + instructionName + " at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+
+            // If we reach here, the instruction is valid and we can continue
+        }
+
+        std::cout << "First pass complete." << std::endl;
+        
+        // Reset tokenizer for the second pass
+        this->tokenizer->reset();
+
+        // Second pass: Generate machine code
+        while (std::get<0>(token = this->tokenizer->nextTokenLog()) != TOKEN_EOF) {
+
+            if (std::get<0>(token) == TOKEN_TAG) {
+                // Handle label definition
+                token = this->tokenizer->nextTokenLog();
+                token = this->tokenizer->nextTokenLog();
+                continue;
+            }
+            else if (std::get<0>(token) == TOKEN_TILDE) {
+                // handle memory offset
+                token = this->tokenizer->nextTokenLog();
+
+                int offset = this->parseNumber(std::get<1>(token));
+                for (int i = 0; i < offset; i++) {
+                    this->io->write(0); // Write zeroes for the offset
+                }
+
+                token = this->tokenizer->nextTokenLog();
+                continue;
+            }
+        
+            // If we reach here, we expect an instruction
+            if (std::get<0>(token) != TOKEN_ID) {
+                throw std::runtime_error("Expected instruction name at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+            
+            uint16_t command = 0;
+
+            std::string instructionName = std::get<1>(token);
+
+            bool imm_src1 = instructionName[0] == 'i';
+            bool imm_src2 = instructionName[instructionName.size() - 1] == 'i';
+
+            // Check if the instruction is immediate
+            if (imm_src1) {
+                // Handle immediate instruction
+                instructionName = instructionName.substr(1);
+                command |= 0x1 << 15;
+            }
+            if (imm_src2) {
+                // Handle immediate instruction
+                instructionName = instructionName.substr(0, instructionName.size() - 1);
+                command |= 0x1 << 14;
+            }
+
+            if (instructions.find(instructionName) == instructions.end()) {
+                throw std::runtime_error("Unknown instruction: " + instructionName + " at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+
+            Instruction instruction = instructions[instructionName];
+            command |= instruction.opcode << 9; // Set the opcode
+
+            // Handle inputs
+            uint16_t args[3] = {0, 0, 0};  // src1, src2, dest
+            int bitShifts[3] = {6, 3, 0};              // bit positions in command
+            bool isImmediate[3] = {imm_src1, imm_src2, false};  // only src1/src2 can be immediate
+
+            for (int i = 0; i < 3; i++) {
+                if (instruction.inputs & (1 << (2 - i))) {
+                    token = tokenizer->nextTokenLog();
+
+                    if (std::get<0>(token) != TOKEN_ID && std::get<0>(token) != TOKEN_NUMBER) {
+                        throw std::runtime_error("Expected argument for " + instructionName +
+                                                " at line " + std::to_string(tokenizer->lineNumber));
+                    }
+
+                    args[i] = handleSrc(token, isImmediate[i]);
+
+                    if (!isImmediate[i]) {
+                        command |= args[i] << bitShifts[i];
+                    }
+                }
+            }
+
+            // Write the command to the output
+            this->io->write(command);
+            // If the instruction has immediate sources, write them as well
+            if (instruction.inputs & 0b100 && imm_src1)
+                this->io->write(args[0]);
+            if (instruction.inputs & 0b10 && imm_src2)
+                this->io->write(args[1]);
+
+            token = this->tokenizer->nextTokenLog();
+            if (std::get<0>(token) != TOKEN_SEMICOLON) {
+                throw std::runtime_error("Expected semicolon after instruction " + instructionName + 
+                                        " at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+
+            // If we reach here, the instruction is valid and we can continue
+            continue;
+        }
+
+        std::cout << "Second pass complete." << std::endl;
+    }
+
+    uint16_t handleSrc(std::tuple<TOKEN_TYPE, std::string> token, bool immediate = false) {
+        if (immediate) {
+            if (std::get<0>(token) == TOKEN_NUMBER) {
+                return this->parseNumber(std::get<1>(token));
+            }
+            else if (std::get<0>(token) == TOKEN_ID) {
+                if (this->labels.find(std::get<1>(token)) != this->labels.end()) {
+                    return this->labels[std::get<1>(token)];
+                }
+                
+                throw std::runtime_error("Error: Unknown label '" + std::get<1>(token) + "' at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+
+            throw std::runtime_error("Error: Invalid immediate source at line " + std::to_string(this->tokenizer->lineNumber));
+        }
+        if (std::get<0>(token) == TOKEN_ID) {
+            if (registers.find(std::get<1>(token)) != registers.end()) {
+                return registers[std::get<1>(token)];
+            }
+            else {
+                throw std::runtime_error("Error: Unknown register or label '" + std::get<1>(token) + "' at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+        }
+
+        throw std::runtime_error("Error: Invalid source token at line " + std::to_string(this->tokenizer->lineNumber));
+    }
+
+    int parseNumber(std::string number, int minNum = 0, int maxNum = 0xFFFF) {
+        // Hexadecimal number
+        if (number.size() > 2 && number[0] == '0' && (number[1] == 'x' || number[1] == 'X')) {
+            int num = std::stoi(number.substr(2), nullptr, 16);
+            if (num < minNum || num > maxNum) {
+                throw std::runtime_error("Error: Hexadecimal number out of range at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+            return num;
+        }
+
+        // Decimal number
+        else {
+            int num = std::stoi(number);
+            if (num < minNum || num > maxNum) {
+                throw std::runtime_error("Error: Decimal number out of range at line " + std::to_string(this->tokenizer->lineNumber));
+            }
+            return num;
+        }
     }
 };
