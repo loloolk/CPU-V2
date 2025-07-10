@@ -1,31 +1,30 @@
-~10
-#start
-iMOV 100 a
-iMOV 210 sp
-iMOV 2 b
+#start:
+    iMOV 100 a;
+    iMOV 210 sp;
+    iMOV 2 b;
 
-#removemultiples
-ADDi c 100 c
-iWRT 65535 c
-SUBi c 100 c
-ADD b c c
-CMP c a
-iJLT removemultiples
+#removemultiples:
+    ADDi c 100 c;
+    iWRT 0xffff c;
+    SUBi c 100 c;
+    ADD b c c;
+CMP c a;
+iJLT removemultiples;
 
-#nextnumber
-ADDi b 101 b
-READ b c
-SUBi b 100 b
-CMPi c 65535
-iJEQ nextnumber
+#nextnumber:
+    ADDi b 101 b;
+    READ b c;
+    SUBi b 100 b;
+CMPi c 0xffff;
+iJEQ nextnumber;
 
-#checkcondition
-PUSH a
-SHR a a
-CMP a b
-POP a
-iJLT 300
+#checkcondition:
+    PUSH a;
+    SHR a a;
+    CMP a b;
+    POP a;
+iJLT 300;
 
-MOV b c
-SHL c c
-iJMP removemultiples
+MOV b c;
+SHL c c;
+iJMP removemultiples;
